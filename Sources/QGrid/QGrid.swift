@@ -43,7 +43,8 @@ public struct QGrid<Data, Content>: View
   private let hPadding: CGFloat
   private let isScrollable: Bool
   private let showScrollIndicators: Bool
-  
+  private let padScrollContentBy: EdgeInsets
+	
   private let data: [Data.Element]
   private let content: (Data.Element) -> Content
   
@@ -70,6 +71,7 @@ public struct QGrid<Data, Content>: View
               hPadding: CGFloat = 10,
               isScrollable: Bool = true,
               showScrollIndicators: Bool = false,
+			  padScrollContentBy: EdgeInsets = EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0),
               content: @escaping (Data.Element) -> Content) {
     self.data = data.map { $0 }
     self.content = content
@@ -81,6 +83,7 @@ public struct QGrid<Data, Content>: View
     self.hPadding = hPadding
     self.isScrollable = isScrollable
     self.showScrollIndicators = showScrollIndicators
+	self.padScrollContentBy = padScrollContentBy
   }
   
   // MARK: - COMPUTED PROPERTIES
@@ -106,7 +109,8 @@ public struct QGrid<Data, Content>: View
         if !self.data.isEmpty {
             if self.isScrollable {
               ScrollView(showsIndicators: self.showScrollIndicators) {
-                self.content(using: geometry)
+				self.content(using: geometry)
+					.padding(self.padScrollContentBy)
               }
             } else {
               self.content(using: geometry)
